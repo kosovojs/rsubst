@@ -2,12 +2,21 @@
 name = "rsubst"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+authors = ["John Downey <jdowney@gmail.com>"]
+description = "A small, envsubst-like utility with conditional logic and advanced templating."
+repository = "https://github.com/jtdowney/rsubst"
+readme = "README.md"
+keywords = ["template", "jinja", "envsubst", "cli", "docker"]
+categories = ["command-line-utilities", "template-engine"]
+homepage = "https://github.com/jtdowney/rsubst"
+documentation = "https://docs.rs/rsubst"
+exclude = [".github/*"]
 
 [profile.release]
 lto = "fat"
 codegen-units = 1
 opt-level = "z"
-#strip = true
 panic = "abort"
 
 [dependencies]
