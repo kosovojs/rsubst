@@ -18,6 +18,7 @@ lto = "fat"
 codegen-units = 1
 opt-level = "z"
 panic = "abort"
+strip = true
 
 [dependencies]
 anyhow = "1"
