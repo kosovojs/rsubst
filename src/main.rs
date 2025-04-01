@@ -1,18 +1,20 @@
 use anyhow::Context;
 use minijinja::Environment;
-use std::{collections::HashMap, env, fs, process};
+use std::{
+    collections::HashMap,
+    env, fs,
+    io::{self, Read},
+};
 
 fn main() -> anyhow::Result<()> {
-    let mut args = env::args();
-    if args.len() != 2 {
-        let name = args.next().unwrap();
-        eprintln!("Usage: {} <template_file>", name);
-        process::exit(1);
-    }
-
-    let path = args.nth(1).unwrap();
-    let template = fs::read_to_string(&path)
-        .with_context(|| format!("Failed to read template file: {}", path))?;
+    let template = if let Some(path) = env::args().nth(1) {
+        fs::read_to_string(&path)
+            .with_context(|| format!("Failed to read template file: {}", path))?
+    } else {
+        let mut input = String::new();
+        io::stdin().read_to_string(&mut input)?;
+        input
+    };
 
     let mut env = Environment::new();
     env.add_template("template", &template)?;
