@@ -17,6 +17,8 @@
 
 ## Installation
 
+### Local
+
 To install `rsubst`, ensure you have Rust installed and use Cargo:
 
 ```shell
@@ -31,6 +33,31 @@ cargo build --release --target x86_64-unknown-linux-musl
 ```
 
 You can use [`cargo-zigbuild`](https://github.com/rust-cross/cargo-zigbuild) on other platforms.
+
+### Docker
+
+You can also build `rsubst` using Docker in a multi-stage build. This is especially useful for containerized applications where you want to configure your system at startup using a lightweight templating tool. With this approach, `rsubst` is compiled in one layer and copied into the final minimal image, where it can be used in an entrypoint script to render configuration files dynamically before launching your application.
+
+```dockerfile
+# Build stage
+FROM rust:alpine AS rsubst-builder
+RUN cargo install --locked rsubst
+
+# Later in the final stage
+COPY --from=rsubst-builder /usr/local/cargo/bin/rsubst /usr/local/bin/rsubst
+```
+
+Then in your entrypoint:
+
+```shell
+#!/bin/sh
+
+set -e
+
+rsubst config.conf.j2 > /app/config.conf
+
+exec "$@"
+```
 
 ## Usage
 
