@@ -20,7 +20,7 @@
 To install `rsubst`, ensure you have Rust installed and use Cargo:
 
 ```shell
-cargo install rsubst
+cargo install --locked rsubst
 ```
 
 Build for release with musl libc on Linux:
