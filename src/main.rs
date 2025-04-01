@@ -1,25 +1,24 @@
-use anyhow::{Context, Result};
+use anyhow::Context;
 use minijinja::Environment;
-use std::path::PathBuf;
-use std::{env, fs};
+use std::{collections::HashMap, env, fs, process};
 
-fn main() -> Result<()> {
+fn main() -> anyhow::Result<()> {
     let mut args = env::args();
     if args.len() != 2 {
         let name = args.next().unwrap();
         eprintln!("Usage: {} <template_file>", name);
-        std::process::exit(1);
+        process::exit(1);
     }
 
-    let template_path = PathBuf::from(args.nth(1).unwrap());
-    let template = fs::read_to_string(&template_path)
-        .with_context(|| format!("Failed to read template file: {}", template_path.display()))?;
+    let path = args.nth(1).unwrap();
+    let template = fs::read_to_string(&path)
+        .with_context(|| format!("Failed to read template file: {}", path))?;
 
     let mut env = Environment::new();
     env.add_template("template", &template)?;
 
     let tmpl = env.get_template("template")?;
-    let ctx = env::vars().collect::<std::collections::HashMap<_, _>>();
+    let ctx = env::vars().collect::<HashMap<_, _>>();
 
     let output = tmpl.render(&ctx)?;
     println!("{}", output);
