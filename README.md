@@ -1,5 +1,9 @@
 # rsubst
 
+[![Crates.io](https://img.shields.io/crates/v/rsubst)](https://crates.io/crates/rsubst)
+[![License](https://img.shields.io/crates/l/rsubst)](LICENSE)
+[![CI](https://github.com/jtdowney/rsubst/actions/workflows/ci.yml/badge.svg)](https://github.com/jtdowney/rsubst/actions/workflows/ci.yml)
+
 `rsubst` is a simple templating CLI tool built in Rust, leveraging [MiniJinja](https://github.com/mitsuhiko/minijinja) to provide dynamic substitutions and conditional logic in configuration files and other text-based templates. It serves as a flexible and powerful alternative to simpler tools like `envsubst`.
 
 ## Motivation
