@@ -43,5 +43,4 @@ jobs:
         with:
           bin: rsubst
           target: ${{ matrix.target }}
-          include: LICENSE,README.md
           token: ${{ secrets.GITHUB_TOKEN }}
