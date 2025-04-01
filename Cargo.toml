@@ -22,3 +22,6 @@ panic = "abort"
 [dependencies]
 anyhow = "1"
 minijinja = "2"
+
+[dev-dependencies]
+tempfile = "3"
