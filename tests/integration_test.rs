@@ -4,28 +4,30 @@ use std::process::{Command, Stdio};
 use tempfile::tempdir;
 
 #[test]
-fn test_simple_output() -> anyhow::Result<()> {
-    let dir = tempdir()?;
+fn test_simple_output() {
+    let dir = tempdir().unwrap();
     let template_path = dir.path().join("template.j2");
 
-    fs::write(&template_path, "Hello {{NAME}}!")?;
+    fs::write(&template_path, "Hello {{NAME}}!").unwrap();
 
     let output = Command::new("cargo")
         .arg("run")
         .arg("--")
         .arg(template_path)
         .env("NAME", "World")
-        .output()?;
+        .output()
+        .unwrap();
 
     assert!(output.status.success());
-    assert_eq!(String::from_utf8(output.stdout)?, "Hello World!\n");
-
-    Ok(())
+    assert_eq!(
+        String::from_utf8(output.stdout).expect("Failed to convert stdout to string"),
+        "Hello World!\n"
+    );
 }
 
 #[test]
-fn test_filters() -> anyhow::Result<()> {
-    let dir = tempdir()?;
+fn test_filters() {
+    let dir = tempdir().unwrap();
     let template_path = dir.path().join("template.j2");
 
     fs::write(
@@ -33,37 +35,36 @@ fn test_filters() -> anyhow::Result<()> {
         "{% for item in ITEMS | split(',') -%}
 -{{ item }}
 {% endfor %}",
-    )?;
+    )
+    .unwrap();
 
     let output = Command::new("cargo")
         .arg("run")
         .arg("--")
         .arg(template_path)
         .env("ITEMS", "a,b,c")
-        .output()?;
+        .output()
+        .unwrap();
 
     assert!(output.status.success());
-    assert_eq!(String::from_utf8(output.stdout)?, "-a\n-b\n-c\n\n");
-
-    Ok(())
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), "-a\n-b\n-c\n\n");
 }
 
 #[test]
-fn test_stdin_input() -> anyhow::Result<()> {
+fn test_stdin_input() {
     let mut child = Command::new("cargo")
         .arg("run")
         .arg("--")
         .env("NAME", "World")
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .spawn()?;
+        .spawn()
+        .unwrap();
 
     let stdin = child.stdin.as_mut().unwrap();
-    stdin.write_all(b"Hello {{NAME}}!")?;
+    stdin.write_all(b"Hello {{NAME}}!").unwrap();
 
-    let output = child.wait_with_output()?;
+    let output = child.wait_with_output().unwrap();
     assert!(output.status.success());
-    assert_eq!(String::from_utf8(output.stdout)?, "Hello World!\n");
-
-    Ok(())
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), "Hello World!\n");
 }

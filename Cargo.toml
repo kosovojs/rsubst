@@ -21,7 +21,6 @@ panic = "abort"
 strip = true
 
 [dependencies]
-anyhow = "1"
 minijinja = "2"
 
 [dev-dependencies]
