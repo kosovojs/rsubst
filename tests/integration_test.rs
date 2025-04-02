@@ -68,3 +68,17 @@ fn test_stdin_input() {
     assert!(output.status.success());
     assert_eq!(String::from_utf8(output.stdout).unwrap(), "Hello World!\n");
 }
+
+#[test]
+fn test_missing_template_file() {
+    let output = Command::new("cargo")
+        .arg("run")
+        .arg("--")
+        .arg("nonexistent.j2")
+        .output()
+        .unwrap();
+
+    assert!(!output.status.success());
+    let stderr = String::from_utf8(output.stderr).unwrap();
+    assert!(stderr.contains("Failed to read template file"));
+}
